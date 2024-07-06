@@ -16,9 +16,9 @@
     </div>
     {% if image %}
     <div class=images>
-        <details>
+        <details id=recipe-img-tab>
               <summary>Pics:</summary>
-              <span><img src="./{{image}}" loading="lazy"/></span>
+              <span><img class=recipe-img data-src="./{{image}}"/></span>
         </details>
     </div>
     {% endif %}
@@ -52,5 +52,12 @@
             console.log(ev);
         }, false);
     }
+
+    // logic for image loading
+    document.getElementById('recipe-img-tab').addEventListener('click', function(ev) {
+        for (const image of document.getElementsByClassName('recipe-img')) {
+            image.src = image.getAttribute('data-src');
+        }
+    }, false);
 </script>
 </html>

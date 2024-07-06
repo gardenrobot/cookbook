@@ -125,6 +125,14 @@ def index():
 def cookbook():
     return render_folder('', RECIPE_DIR)
 
+@app.get('/cookbook/<path:path>.png')
+def png(path):
+    return get_image(path+'.png')
+
+@app.get('/cookbook/<path:path>.jpg')
+def jpg(path):
+    return get_image(path+'.jpg')
+
 @app.get('/cookbook/<path:path>')
 def all_routes(path):
 
@@ -138,10 +146,6 @@ def all_routes(path):
         if not path.endswith('/') and path != '':
             return redirect('/cookbook/'+path+'/')
         return render_folder(path, joined_path)
-
-    # image file
-    if path.endswith('.jpg') or path.endswith('.png'):
-        return get_image(path)
 
     # recipe file
     recipe_path = joined_path + '.cook'
