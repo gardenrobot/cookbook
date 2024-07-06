@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Banana Bread</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <h1>Banana Bread</h1>
+    <div>
+        <span><a href=/cookbook/>Root</a></span>
+        {% for folder in parent_folders %}
+        <span>/</span> <span><a href=/cookbook/{{folder[1]}}>{{folder[0]}}</a></span>
+        {% endfor %}
+    </div>
+    <div class=images>
+        IMAGES TO BE IMPLEMENTED
+    </div>
+    <div class=ingredients>
+        <ul>
+            {% for ingr in ingredients %}
+            <li>{{ingr.name}}, {{ingr.quantity.amount}}{% if ingr.quantity.unit != None %} {{ingr.quantity.unit}} {% endif %}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class=steps>
+        {% for step in steps %}
+        <div>
+            <input type=checkbox class=stepinput>
+            <span class=steptext>{{loop.index}}. {{step}}</span>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+<script type="text/javascript">
+    // logic for checking off steps
+    for (const checkbox of document.getElementsByClassName('stepinput')) {
+        checkbox.addEventListener('click', function(ev) {
+            classname = 'struckthrough'
+            is_checked = ev.target.checked;
+            span = ev.target.parentNode.getElementsByClassName('steptext')[0];
+            if(is_checked)
+                span.classList.add(classname);
+            else
+                span.classList.remove(classname);
+            console.log(ev);
+        }, false);
+    }
+</script>
+</html>

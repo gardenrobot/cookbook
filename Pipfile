@@ -1,0 +1,14 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+flask = "~=3.0.3"
+cooklang = {ref = "12ea1005f697769bbb00fe20b6a1441cd3709a33", git = "git+https://github.com/luizribeiro/py-cooklang.git"}
+jinja2 = "~=3.1.4"
+
+[dev-packages]
+
+[requires]
+python_version = "3.10"
