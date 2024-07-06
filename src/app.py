@@ -9,6 +9,8 @@ RECIPE_DIR = os.path.join(BASE_DIR, 'recipes')
 TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
 STATIC_DIR = os.path.join(BASE_DIR, 'static')
 
+EXCLUDE_DIRS = ['config']
+
 app = Flask(
     __name__,
     static_url_path='/static',
@@ -16,10 +18,6 @@ app = Flask(
 )
 
 jinja_env = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
-
-def is_witin_recipes(full_path):
-    # TODO implement this for security
-    return True
 
 def get_parent_folders(rel_path):
     """
@@ -48,6 +46,8 @@ def render_folder(rel_path, full_path):
     _, sub_folders, files = next(os.walk(full_path))
     recipes = [f[:-5] for f in files if f.endswith('.cook')]
     parent_folders = get_parent_folders(rel_path)
+
+    sub_folders = [x for x in sub_folders if x not in EXCLUDE_DIRS]
 
     tmp = jinja_env.get_template("folder.html").render(
         parent_folders=parent_folders,
@@ -137,7 +137,6 @@ def all_routes(path):
 
     # folder
     if os.path.isdir(joined_path):
-        # TODO exclude certain folders/files
         if not path.endswith('/') and path != '':
             return redirect('/cookbook/'+path+'/')
         return render_folder(path, joined_path)
