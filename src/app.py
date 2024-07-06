@@ -83,12 +83,21 @@ def highlight_steps(ingredients, steps):
 
     return hl_steps
 
+def get_image_name(path, name):
+    return 'Banana Bread.jpg'
+
+def get_image(rel_path):
+    path = os.path.join(RECIPE_DIR, rel_path)
+    with open(path, 'rb') as f:
+        return f.read()
+
 
 def render_recipe(rel_path, full_path):
     parent_folders = get_parent_folders(rel_path)
     name = parent_folders[-1][0]
     with open(full_path) as f:
         recipe = Recipe.parse(f.read())
+    image = get_image_name(full_path, name)
 
     highlighted_steps = highlight_steps(recipe.ingredients, recipe.steps)
 
@@ -99,6 +108,7 @@ def render_recipe(rel_path, full_path):
         steps=highlighted_steps,
         metadata=recipe.metadata,
         name=name,
+        image=image,
     )
 
 @app.get('/')
@@ -111,20 +121,28 @@ def cookbook():
 
 @app.get('/cookbook/<path:path>')
 def all_routes(path):
-    if path == '.':
-        path = ''
+
+    # check file exists and is not doing dir traversal attack
     joined_path = os.path.join(RECIPE_DIR, path)
     if not os.path.exists(joined_path) and not os.path.exists(joined_path+'.cook'):
         return "Invalid path", 404
     if not is_witin_recipes(joined_path):
         return "Restricted path", 403
 
+    # folder
     if os.path.isdir(joined_path):
         # TODO exclude certain folders/files
         if not path.endswith('/') and path != '':
             return redirect('/cookbook/'+path+'/')
         return render_folder(path, joined_path)
+
+    # image file
+    if path.endswith('.jpg') or path.endswith('.png'):
+        return get_image(path)
+
+    # recipe file
     recipe_path = joined_path + '.cook'
     if os.path.isfile(recipe_path):
         return render_recipe(path, recipe_path)
+
     return "Unknown error", 500

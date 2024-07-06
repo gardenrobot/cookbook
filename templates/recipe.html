@@ -14,9 +14,15 @@
         <span>/</span> <span><a href=/cookbook/{{folder[1]}}>{{folder[0]}}</a></span>
         {% endfor %}
     </div>
+    {% if image %}
     <div class=images>
-      (Images will be implemented later. For now, just imagine the {{name}})
+      
+        <details>
+              <summary>Pics:</summary>
+              <span><img src="./{{image}}"/></span>
+        </details>
     </div>
+    {% endif %}
     <div class=ingredients>
         <ul>
             {% for ingr in ingredients %}
