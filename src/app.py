@@ -5,9 +5,9 @@ from jinja2 import Environment, FileSystemLoader
 import urllib
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-RECIPE_DIR = os.path.join(BASE_DIR, 'recipes')
 TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
 STATIC_DIR = os.path.join(BASE_DIR, 'static')
+RECIPE_DIR = os.getenv('RECIPE_DIR', os.path.join(BASE_DIR, 'recipes'))
 
 EXCLUDE_DIRS = ['config']
 
@@ -132,8 +132,6 @@ def all_routes(path):
     joined_path = os.path.join(RECIPE_DIR, path)
     if not os.path.exists(joined_path) and not os.path.exists(joined_path+'.cook'):
         return "Invalid path", 404
-    if not is_witin_recipes(joined_path):
-        return "Restricted path", 403
 
     # folder
     if os.path.isdir(joined_path):
