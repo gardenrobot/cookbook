@@ -86,7 +86,11 @@ def highlight_steps(ingredients, steps):
     return hl_steps
 
 def get_image_name(path, name):
-    return 'Banana Bread.jpg'
+    base = path[:-5]
+    for img_ext in ['jpg', 'png']:
+        if os.path.isfile(base+'.'+img_ext):
+            return name+'.'+img_ext
+    return None
 
 def get_image(rel_path):
     path = os.path.join(RECIPE_DIR, rel_path)
