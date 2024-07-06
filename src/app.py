@@ -86,6 +86,7 @@ def highlight_steps(ingredients, steps):
 
 def render_recipe(rel_path, full_path):
     parent_folders = get_parent_folders(rel_path)
+    name = parent_folders[-1][0]
     with open(full_path) as f:
         recipe = Recipe.parse(f.read())
 
@@ -97,6 +98,7 @@ def render_recipe(rel_path, full_path):
         ingredients=recipe.ingredients,
         steps=highlighted_steps,
         metadata=recipe.metadata,
+        name=name,
     )
 
 @app.get('/')

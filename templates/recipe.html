@@ -3,11 +3,11 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Banana Bread</title>
+    <title>{{name}}</title>
     <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
-    <h1>Banana Bread</h1>
+  <h1>{{name}}</h1>
     <div>
         <span><a href=/cookbook/>Root</a></span>
         {% for folder in parent_folders %}
@@ -15,7 +15,7 @@
         {% endfor %}
     </div>
     <div class=images>
-        IMAGES TO BE IMPLEMENTED
+      (Images will be implemented later. For now, just imagine the {{name}})
     </div>
     <div class=ingredients>
         <ul>
