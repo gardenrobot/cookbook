@@ -73,10 +73,12 @@ def highlight_steps(ingredients, steps):
     for index, ingr, step_index in indexes:
         step = hl_steps[step_index]
 
-        hl = '<span class=ingr-quantity-inline>(' + str(ingr.quantity.amount)
-        if ingr.quantity.unit:
-            hl += ' ' + ingr.quantity.unit
-        hl += ')</span>'
+        hl = ''
+        if ingr.quantity != None:
+            hl += '<span class=ingr-quantity-inline>(' + str(ingr.quantity.amount)
+            if ingr.quantity.unit:
+                hl += ' ' + ingr.quantity.unit
+            hl += ')</span>'
 
         step = step[:index] + hl + step[index:]
         hl_steps[step_index] = step

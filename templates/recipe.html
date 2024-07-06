@@ -26,7 +26,7 @@
     <div class=ingredients>
         <ul>
             {% for ingr in ingredients %}
-            <li>{{ingr.name}}, {{ingr.quantity.amount}}{% if ingr.quantity.unit != None %} {{ingr.quantity.unit}} {% endif %}</li>
+            <li>{{ingr.name}}{% if ingr.quantity %}, {{ingr.quantity.amount}}{% if ingr.quantity.unit != None %} {{ingr.quantity.unit}} {% endif %}{% endif %}</li>
             {% endfor %}
         </ul>
     </div>
