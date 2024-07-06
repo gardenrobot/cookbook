@@ -23,6 +23,7 @@
     </div>
     {% endif %}
     <div class=ingredients>
+        <h2>Ingredience:</h2>
         <ul>
             {% for ingr in ingredients %}
             <li>{{ingr.name}}{% if ingr.quantity %}, {{ingr.quantity.amount}}{% if ingr.quantity.unit != None %} {{ingr.quantity.unit}} {% endif %}{% endif %}</li>
@@ -30,6 +31,7 @@
         </ul>
     </div>
     <div class=steps>
+        <h2>Stoops:</h2>
         {% for step in steps %}
         <div>
             <input type=checkbox class=stepinput>

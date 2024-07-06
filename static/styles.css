@@ -2,14 +2,21 @@ body {
     margin:40px auto;
     max-width:650px;
     line-height:1.6;
-    font-size:18px;
+    font-size:20px;
     color:#444;
     padding:0 10px;
     font-family: sans-serif;
+    background-color: #774dc5;
+    color: black;
 }
 
 a {
+    color: lightgray;
     text-decoration: none;
+}
+
+h2 {
+    font-size: 22px;
 }
 
 .linklist {
@@ -39,14 +46,13 @@ a {
     padding-bottom: 10px;
     padding-left: 10px;
     padding-right: 10px;
-    background: white;
 }
-.steps div:nth-child(odd) {
-    background: lightgrey;
+.steps div:nth-child(even) {
+    background: #b081ff;
 }
 
 .ingr-quantity-inline {
-    color: #523861;
+    color: lightgray;
     font-weight: bold;
 }
 
