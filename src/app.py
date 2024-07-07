@@ -44,10 +44,10 @@ def get_parent_folders(rel_path):
 
 def render_folder(rel_path, full_path):
     _, sub_folders, files = next(os.walk(full_path))
-    recipes = [f[:-5] for f in files if f.endswith('.cook')]
+    recipes = sorted([f[:-5] for f in files if f.endswith('.cook')])
     parent_folders = get_parent_folders(rel_path)
 
-    sub_folders = [x for x in sub_folders if x not in EXCLUDE_DIRS]
+    sub_folders = sorted([x for x in sub_folders if x not in EXCLUDE_DIRS])
 
     tmp = jinja_env.get_template("folder.html").render(
         parent_folders=parent_folders,
