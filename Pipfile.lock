@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "ccb30cfa4c3f195769f9640672e26e4e7d72c905ca0995547f6063c57279bddb"
+            "sha256": "22795ed70ff5b611c93b9cb6b833b3a75861d930f7b38516a54112e80cf3b816"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -33,7 +33,7 @@
             "version": "==8.1.7"
         },
         "cooklang": {
-            "git": "git+https://github.com/luizribeiro/py-cooklang.git",
+            "git": "git+https://github.com/gardenrobot/py-cooklang.git",
             "ref": null
         },
         "flask": {

@@ -5,7 +5,7 @@ name = "pypi"
 
 [packages]
 flask = "~=3.0.3"
-cooklang = {ref = "12ea1005f697769bbb00fe20b6a1441cd3709a33", git = "git+https://github.com/luizribeiro/py-cooklang.git"}
+cooklang = {ref = "4c6bca496e872cf17d64425dbd66fc26884b10fd", git = "git+https://github.com/gardenrobot/py-cooklang.git"}
 jinja2 = "~=3.1.4"
 
 [dev-packages]
