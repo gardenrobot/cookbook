@@ -1,4 +1,4 @@
-from flask import Flask, send_from_directory, redirect, Response
+from flask import Flask, send_from_directory, redirect, Response, request
 from cooklang import Recipe
 import os
 from jinja2 import Environment, FileSystemLoader
@@ -113,7 +113,7 @@ def render_folder(rel_path):
         recipes=recipes,
     )
 
-def render_recipe(rel_path, is_printable=False):
+def render_recipe(rel_path, is_printable, color):
     full_path = os.path.join(RECIPE_DIR, rel_path)
 
     parent_folders = split_path(rel_path)
@@ -140,6 +140,7 @@ def render_recipe(rel_path, is_printable=False):
         cooklang_link=cooklang_link,
         printable_link=printable_link,
         is_printable=is_printable,
+        color=color,
     )
 
 @app.get('/')
@@ -184,7 +185,9 @@ def recipe_and_folder(path):
     if matching_path != None:
         joined_path = os.path.join(RECIPE_DIR, matching_path)
         if os.path.isfile(joined_path):
-            return render_recipe(matching_path)
+            color = request.args.get('color')
+            print(color)
+            return render_recipe(matching_path, False, color)
 
     return 'Recipe/Folder not found', 404
 
@@ -194,6 +197,6 @@ def printable(path):
     if matching_path != None:
         joined_path = os.path.join(RECIPE_DIR, matching_path)
         if os.path.isfile(joined_path):
-            return render_recipe(matching_path, True)
+            return render_recipe(matching_path, True, None)
 
     return 'Recipe not found', 404
