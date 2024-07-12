@@ -186,7 +186,8 @@ def recipe_and_folder(path):
         joined_path = os.path.join(RECIPE_DIR, matching_path)
         if os.path.isfile(joined_path):
             color = request.args.get('color')
-            print(color)
+            if color:
+                color = color.split(',')
             return render_recipe(matching_path, False, color)
 
     return 'Recipe/Folder not found', 404

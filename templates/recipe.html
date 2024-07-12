@@ -81,16 +81,16 @@
     }, false);
 </script>
 <style>
-{% if color == '1' %}
+{% if color %}
     body {
-        color: white;
-        background-color: #282828;
+        color: #{{color[0]}};
+        background-color: #{{color[1]}};
     }
     .steps div:nth-child(even) {
-        background: #181818;
+        background: #{{color[2]}};
     }
     .ingr-quantity-inline {
-        color: #73648A;
+        color: #{{color[3]}};
     }
 {% endif %}
 </style>
