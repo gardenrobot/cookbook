@@ -6,8 +6,8 @@ body {
     color:#444;
     padding:0 10px;
     font-family: sans-serif;
-    background-color: #774dc5;
-    color: black;
+    color: white;
+    background-color: #282828;
 }
 
 a {
@@ -50,11 +50,11 @@ h2 {
     padding-right: 10px;
 }
 .steps div:nth-child(even) {
-    background: #b081ff;
+    background: #181818;
 }
 
 .ingr-quantity-inline {
-    color: lightgray;
+    color: #73648A;
     font-weight: bold;
 }
 
