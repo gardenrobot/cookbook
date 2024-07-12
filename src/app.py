@@ -134,6 +134,7 @@ def render_recipe(rel_path):
         metadata=recipe.metadata,
         title=title,
         image=image,
+        cooklang_link=rel_path,
     )
 
 @app.get('/')
