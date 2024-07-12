@@ -25,8 +25,18 @@
     {% if image %}
     <div class=images>
         <details id=recipe-img-tab>
-              <summary>Pics:</summary>
-              <span><img class=recipe-img data-src="/cookbook/{{image}}"/></span>
+            <summary>Pics:</summary>
+            <span><img class=recipe-img data-src="/cookbook/{{image}}"/></span>
+        </details>
+    </div>
+    {% endif %}
+    {% if metadata %}
+    <div class=metadata>
+        <details>
+            <summary>Metadata:</summary>
+            {% for md in metadata %}
+                <div>{{md}}: {{metadata[md]}}</div>
+            {% endfor %}
         </details>
     </div>
     {% endif %}
