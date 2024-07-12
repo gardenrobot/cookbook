@@ -3,22 +3,22 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{name}}</title>
+    <title>{{title}}</title>
     <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
-  <h1>{{name}}</h1>
+  <h1>{{title}}</h1>
     <div>
         <span><a href=/cookbook/>Cookbook</a></span>
         {% for folder in parent_folders %}
-        <span>/</span> <span><a href=/cookbook/{{folder[1]}}>{{folder[0]}}</a></span>
+        <span>/</span> <span><a href={{"../"*(parent_folders|length - loop.index)}}>{{folder}}</a></span>
         {% endfor %}
     </div>
     {% if image %}
     <div class=images>
         <details id=recipe-img-tab>
               <summary>Pics:</summary>
-              <span><img class=recipe-img data-src="./{{image}}"/></span>
+              <span><img class=recipe-img data-src="/cookbook/{{image}}"/></span>
         </details>
     </div>
     {% endif %}

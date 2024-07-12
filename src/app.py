@@ -1,4 +1,4 @@
-from flask import Flask, send_from_directory, redirect
+from flask import Flask, send_from_directory, redirect, Response
 from cooklang import Recipe
 import os
 from jinja2 import Environment, FileSystemLoader
@@ -19,42 +19,43 @@ app = Flask(
 
 jinja_env = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
 
-def get_parent_folders(rel_path):
-    """
-        Take a user supplied path and return a list of tuples.
-        First item of the tuple is a part of the path.
-        Second items is the relative path up until that point.
-        Ex: 'a/b/c' => [('a', 'a'), ('b', 'a/b'), ('c', 'a/b/c')]
-    """
-    all_paths = []
-    while (split_path := os.path.split(rel_path))[0] != '':
-        if (path := split_path[1]) != '':
-            all_paths.append(path)
-        rel_path = split_path[0]
-    all_paths.append(split_path[1])
-    all_paths.reverse()
 
-    final = []
-    last_path = ''
-    for part in all_paths:
-        last_path = os.path.join(last_path, part)
-        final.append((part, urllib.parse.quote(last_path)))
-    return final
+def split_path(path):
+    parts = []
+    headtail = (path, 0)
+    while (headtail := os.path.split(headtail[0]))[0] not in ['', '/']:
+        parts.insert(0, headtail[1])
+    parts.insert(0, headtail[1])
+    if (head := headtail[0]) == '/':
+        parts.insert(0, head)
+    return parts
 
+def join_paths(parts):
+    joined = ''
+    for part in parts:
+        joined = os.path.join(joined, part)
+    return joined
 
-def render_folder(rel_path, full_path):
-    _, sub_folders, files = next(os.walk(full_path))
-    recipes = sorted([f[:-5] for f in files if f.endswith('.cook')])
-    parent_folders = get_parent_folders(rel_path)
+def find_matching_child(folder, tail):
+    _, folders, files = next(os.walk(os.path.join(RECIPE_DIR, folder)))
+    replaced_tail = tail.replace('_', ' ')
+    for group in [folders, files]:
+        for t in [tail, replaced_tail]:
+            if t in group:
+                return t
+    return None
 
-    sub_folders = sorted([x for x in sub_folders if x not in EXCLUDE_DIRS])
-
-    tmp = jinja_env.get_template("folder.html").render(
-        parent_folders=parent_folders,
-        sub_folders=sub_folders,
-        recipes=recipes,
-    )
-    return tmp
+def find_matching_path(unjoined_path):
+    """Take an unjoined_path and return the file it matches."""
+    parts = split_path(unjoined_path)
+    matching_parts = []
+    for part_count, part in enumerate(parts):
+        current_folder = join_paths(matching_parts[:part_count]) or '.'
+        match = find_matching_child(current_folder, part)
+        if match == None:
+            return None
+        matching_parts.append(match)
+    return join_paths(matching_parts)
 
 def highlight_steps(ingredients, steps):
     # find indexes to insert highlighting
@@ -85,11 +86,12 @@ def highlight_steps(ingredients, steps):
 
     return hl_steps
 
-def get_image_name(path, name):
-    base = path[:-5]
-    for img_ext in ['jpg', 'png']:
-        if os.path.isfile(base+'.'+img_ext):
-            return name+'.'+img_ext
+def get_image_name(rel_path):
+    recipe_path = rel_path[:-5]
+    parts = split_path(recipe_path)
+    for ext in ['jpg', 'png']:
+        if os.path.isfile(os.path.join(RECIPE_DIR, recipe_path+'.'+ext)):
+            return recipe_path+'.'+ext
     return None
 
 def get_image(rel_path):
@@ -97,13 +99,30 @@ def get_image(rel_path):
     with open(path, 'rb') as f:
         return f.read()
 
+def render_folder(rel_path):
+    full_path = os.path.join(RECIPE_DIR, rel_path)
+    _, sub_folders, files = next(os.walk(full_path))
+    parent_folders = split_path(rel_path)
 
-def render_recipe(rel_path, full_path):
-    parent_folders = get_parent_folders(rel_path)
-    name = parent_folders[-1][0]
+    sub_folders = sorted([x for x in sub_folders if x not in EXCLUDE_DIRS])
+    recipes = sorted([f[:-5] for f in files if f.endswith('.cook')])
+
+    return jinja_env.get_template("folder.html").render(
+        parent_folders=parent_folders,
+        sub_folders=sub_folders,
+        recipes=recipes,
+    )
+
+def render_recipe(rel_path):
+    full_path = os.path.join(RECIPE_DIR, rel_path)
+
+    parent_folders = split_path(rel_path)
+    parent_folders[-1] = parent_folders[-1][:-5]
+
+    title = parent_folders[-1]
     with open(full_path) as f:
         recipe = Recipe.parse(f.read())
-    image = get_image_name(full_path, name)
+    image = get_image_name(rel_path)
 
     highlighted_steps = highlight_steps(recipe.ingredients, recipe.steps)
 
@@ -113,7 +132,7 @@ def render_recipe(rel_path, full_path):
         ingredients=recipe.ingredients,
         steps=highlighted_steps,
         metadata=recipe.metadata,
-        name=name,
+        title=title,
         image=image,
     )
 
@@ -123,7 +142,7 @@ def index():
 
 @app.get('/cookbook/')
 def cookbook():
-    return render_folder('', RECIPE_DIR)
+    return render_folder('')
 
 @app.get('/cookbook/<path:path>.png')
 def png(path):
@@ -133,23 +152,31 @@ def png(path):
 def jpg(path):
     return get_image(path+'.jpg')
 
-@app.get('/cookbook/<path:path>')
-def all_routes(path):
+@app.get('/cookbook/<path:path>.cook')
+def cook(path):
+    path += '.cook'
+    matching_path = find_matching_path(path)
 
-    # check file exists and is not doing dir traversal attack
-    joined_path = os.path.join(RECIPE_DIR, path)
-    if not os.path.exists(joined_path) and not os.path.exists(joined_path+'.cook'):
-        return "Invalid path", 404
+    if matching_path == None:
+        return 'Cook file not found', 404
 
-    # folder
-    if os.path.isdir(joined_path):
-        if not path.endswith('/') and path != '':
-            return redirect('/cookbook/'+path+'/')
-        return render_folder(path, joined_path)
+    joined_path = os.path.join(RECIPE_DIR, matching_path)
+    with open(joined_path) as f:
+        return Response(f.read(), mimetype='text/plain')
 
-    # recipe file
-    recipe_path = joined_path + '.cook'
-    if os.path.isfile(recipe_path):
-        return render_recipe(path, recipe_path)
+@app.get('/cookbook/<path:path>/')
+def recipe_and_folder(path):
+    matching_path = find_matching_path(path)
+    if matching_path != None:
+        joined_path = os.path.join(RECIPE_DIR, matching_path)
+        if os.path.isdir(joined_path):
+            return render_folder(matching_path)
 
-    return "Unknown error", 500
+    matching_path = find_matching_path(path + '.cook')
+    if matching_path != None:
+        joined_path = os.path.join(RECIPE_DIR, matching_path)
+        if os.path.isfile(joined_path):
+            return render_recipe(matching_path)
+
+    return 'Recipe/Folder not found', 404
+

@@ -10,19 +10,19 @@
     <div>
         <span><a href=/cookbook/>Cookbook</a></span>
         {% for folder in parent_folders %}
-        <span>/</span> <span><a href=/cookbook/{{folder[1]}}/>{{folder[0]}}</a></span>
+        <span>/</span> <span><a href={{"../"*(parent_folders|length - loop.index)}}>{{folder}}</a></span>
         {% endfor %}
     </div>
     <div>
         <ul class="folderlist linklist">
             {% for folder in sub_folders %}
-            <li><a href="{{folder}}/">📁 {{folder}}</a></li>
+            <li><a href="{{folder|replace(' ', '_')}}/">📁 {{folder}}</a></li>
             {% endfor %}
         </ul>
     <div>
         <ul class=linklist>
             {% for recipe in recipes %}
-            <li><a href="{{recipe}}">🍳 {{recipe}}</a></li>
+            <li><a href="{{recipe|replace(' ', '_')}}">🍳 {{recipe}}</a></li>
             {% endfor %}
         </ul>
     </div>
