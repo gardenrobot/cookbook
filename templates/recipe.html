@@ -59,18 +59,22 @@
     </div>
 </body>
 <script type="text/javascript">
+    update_checkboxes = function(checkbox) {
+        classname = 'struckthrough'
+        is_checked = checkbox.checked;
+        span = checkbox.parentNode.getElementsByClassName('steptext')[0];
+        if(is_checked)
+            span.classList.add(classname);
+        else
+            span.classList.remove(classname);
+    }
+
     // logic for checking off steps
     for (const checkbox of document.getElementsByClassName('stepinput')) {
         checkbox.addEventListener('click', function(ev) {
-            classname = 'struckthrough'
-            is_checked = ev.target.checked;
-            span = ev.target.parentNode.getElementsByClassName('steptext')[0];
-            if(is_checked)
-                span.classList.add(classname);
-            else
-                span.classList.remove(classname);
-            console.log(ev);
+            update_checkboxes(ev.target)
         }, false);
+        update_checkboxes(checkbox);
     }
 
     // logic for image loading
