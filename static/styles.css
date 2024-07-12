@@ -1,5 +1,6 @@
 body {
-    margin:40px auto;
+    margin: auto;
+    margin-top:40px;
     max-width:650px;
     line-height:1.6;
     font-size:20px;
@@ -10,7 +11,7 @@ body {
     background-color: #282828;
 }
 
-a {
+.internallink {
     color: lightgray;
     text-decoration: none;
 }
@@ -89,4 +90,10 @@ h2 {
 
 .links {
     padding-left: 20px;
+}
+
+footer {
+    text-align: center;
+    padding-top: 20px;
+    font-size: 14px;
 }

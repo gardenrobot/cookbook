@@ -8,16 +8,16 @@
 </head>
 <body>
     <div class=tree>
-        <span><a href=/cookbook/>Cookbook</a></span>
+        <span><a class="internallink" href=/cookbook/>Cookbook</a></span>
         {% for folder in parent_folders %}
-        <span>/</span> <span><a href={{"../"*(parent_folders|length - loop.index)}}>{{folder}}</a></span>
+        <span>/</span> <span><a class="internallink" href={{"../"*(parent_folders|length - loop.index)}}>{{folder}}</a></span>
         {% endfor %}
     </div>
     {% if sub_folders %}
     <div>
         <ul class="folderlist linklist">
             {% for folder in sub_folders %}
-            <li><a href="{{folder|replace(' ', '_')}}/">📁 {{folder}}</a></li>
+            <li><a class="internallink" href="{{folder|replace(' ', '_')}}/">📁 {{folder}}</a></li>
             {% endfor %}
         </ul>
     </div>
@@ -26,10 +26,14 @@
     <div>
         <ul class=linklist>
             {% for recipe in recipes %}
-            <li><a href="{{recipe|replace(' ', '_')}}">🍳 {{recipe}}</a></li>
+            <li><a class="internallink" href="{{recipe|replace(' ', '_')}}">🍳 {{recipe}}</a></li>
             {% endfor %}
         </ul>
     </div>
     {% endif %}
+  <footer>
+    <span>Site powered by <a href="https://github.com/gardenrobot/cookbook">Cookbook</a>.</span>
+    <span>Recipe stored in <a href="https://cooklang.org/">CookLang</a> format.</span>
+  </footer>
 </body>
 </html>
