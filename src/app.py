@@ -113,7 +113,7 @@ def render_folder(rel_path):
         recipes=recipes,
     )
 
-def render_recipe(rel_path):
+def render_recipe(rel_path, is_printable=False):
     full_path = os.path.join(RECIPE_DIR, rel_path)
 
     parent_folders = split_path(rel_path)
@@ -126,6 +126,9 @@ def render_recipe(rel_path):
 
     highlighted_steps = highlight_steps(recipe.ingredients, recipe.steps)
 
+    cooklang_link = '/cookbook/' + rel_path
+    printable_link = '/printable/' + rel_path[:-5]
+
 
     return jinja_env.get_template('recipe.html').render(
         parent_folders=parent_folders,
@@ -134,7 +137,9 @@ def render_recipe(rel_path):
         metadata=recipe.metadata,
         title=title,
         image=image,
-        cooklang_link=rel_path,
+        cooklang_link=cooklang_link,
+        printable_link=printable_link,
+        is_printable=is_printable,
     )
 
 @app.get('/')
@@ -181,3 +186,12 @@ def recipe_and_folder(path):
 
     return 'Recipe/Folder not found', 404
 
+@app.get('/printable/<path:path>/')
+def printable(path):
+    matching_path = find_matching_path(path + '.cook')
+    if matching_path != None:
+        joined_path = os.path.join(RECIPE_DIR, matching_path)
+        if os.path.isfile(joined_path):
+            return render_recipe(matching_path, True)
+
+    return 'Recipe not found', 404
