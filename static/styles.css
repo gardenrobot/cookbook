@@ -21,6 +21,8 @@ h2 {
 
 .linklist {
     box-sizing: border-box;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 .linklist li {
@@ -82,10 +84,9 @@ h2 {
 }
 
 .images {
-    padding: 20px;
+    padding-left: 20px;
 }
 
-.cooklang_link {
-    font-size: 16px;
-    padding: 25px;
+.links {
+    padding-left: 20px;
 }

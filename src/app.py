@@ -168,7 +168,9 @@ def cook(path):
 
     joined_path = os.path.join(RECIPE_DIR, matching_path)
     with open(joined_path) as f:
-        return Response(f.read(), mimetype='text/plain')
+        response = Response(f.read(), mimetype='text/plain')
+    response.headers['Content-Disposition'] = 'attachment; filename=' + os.path.split(path)[1]
+    return response
 
 @app.get('/cookbook/<path:path>/')
 def recipe_and_folder(path):

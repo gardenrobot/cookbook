@@ -7,18 +7,22 @@
     <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
-    <div>
+    <div class=tree>
         <span><a href=/cookbook/>Cookbook</a></span>
         {% for folder in parent_folders %}
         <span>/</span> <span><a href={{"../"*(parent_folders|length - loop.index)}}>{{folder}}</a></span>
         {% endfor %}
     </div>
+    {% if sub_folders %}
     <div>
         <ul class="folderlist linklist">
             {% for folder in sub_folders %}
             <li><a href="{{folder|replace(' ', '_')}}/">📁 {{folder}}</a></li>
             {% endfor %}
         </ul>
+    </div>
+    {% endif %}
+    {% if recipes %}
     <div>
         <ul class=linklist>
             {% for recipe in recipes %}
@@ -26,5 +30,6 @@
             {% endfor %}
         </ul>
     </div>
+    {% endif %}
 </body>
 </html>

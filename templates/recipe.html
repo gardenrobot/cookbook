@@ -11,16 +11,16 @@
     {% endif %}
 </head>
 <body>
-  <h1>{{title}}</h1>
-    <div class=links>
-        <span title="Printer-friendly view"><a href="{{printable_link}}">🖨️</a></span>
-        <span title="Download .cook file"><a href="{{cooklang_link}}">💾</a></span>
-    </div>
     <div class=tree>
         <span><a href=/cookbook/>Cookbook</a></span>
         {% for folder in parent_folders %}
         <span>/</span> <span><a href={{"../"*(parent_folders|length - loop.index)}}>{{folder}}</a></span>
         {% endfor %}
+    </div>
+  <h1>{{title}}</h1>
+    <div class=links>
+        <span title="Printer-friendly view"><a href="{{printable_link}}">🖨️</a></span>
+        <span title="Download .cook file"><a href="{{cooklang_link}}">💾</a></span>
     </div>
     {% if image %}
     <div class=images>
@@ -46,9 +46,6 @@
             <span class=steptext>{{loop.index}}. {{step}}</span>
         </div>
         {% endfor %}
-    </div>
-    <div class=cooklang_link>
-      <a href="/cookbook/{{cooklang_link}}">Download <i>{{title}}.cook</i></a>
     </div>
 </body>
 <script type="text/javascript">
