@@ -13,4 +13,5 @@ COPY src/ src/
 COPY templates/ templates/
 COPY static/ static/
 
-CMD flask --app src/app run --debug --host=0.0.0.0
+#CMD flask --app src/app run --debug --host=0.0.0.0
+CMD gunicorn --config src/gunicorn.py src.app:app
