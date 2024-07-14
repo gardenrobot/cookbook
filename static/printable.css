@@ -14,6 +14,6 @@ body {
 
 
 /* things to hide */
-.stepinput, .cooklang_link, .images, .metadata, .tree, .links {
+.stepinput, .cooklang_link, .images, .metadata, .tree, .links, footer {
     display: none;
 }
