@@ -1,4 +1,4 @@
-A quick and dirty [cooklang](https://cooklang.org/) formatter.
+A recipe site using [cooklang](https://cooklang.org/) as the data format.
 
 UI based on the official app, with some changes that I have found helpful for reading in the kitchen.
 
