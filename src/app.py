@@ -3,6 +3,7 @@ from cooklang import Recipe
 import os
 from jinja2 import Environment, FileSystemLoader
 import urllib
+from datetime import datetime
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 TEMPLATE_DIR = os.path.join(BASE_DIR, "templates")
@@ -103,7 +104,12 @@ def get_image_name(rel_path):
 def get_image(rel_path):
     path = os.path.join(RECIPE_DIR, rel_path)
     with open(path, "rb") as f:
-        return f.read()
+        response = Response(f.read())
+
+    date_modified = datetime.utcfromtimestamp(os.path.getmtime(path))
+    response.headers["Last-Modified"] = date_modified.strftime("%a, %d %b %Y %T GMT")
+
+    return response
 
 
 def render_folder(rel_path):
