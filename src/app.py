@@ -92,7 +92,7 @@ def highlight_steps(ingredients, steps):
     return hl_steps
 
 
-def get_image_name(rel_path):
+def get_image_path(rel_path):
     recipe_path = rel_path[:-5]
     parts = split_path(recipe_path)
     for ext in ["jpg", "png"]:
@@ -103,13 +103,25 @@ def get_image_name(rel_path):
 
 def get_image(rel_path):
     path = os.path.join(RECIPE_DIR, rel_path)
+
+    # check if cached
+    cache_date = request.headers.get("If-Modified-Since")
+    if cache_date != None and cache_date == img_last_modified(rel_path):
+        return Response(status=304)
+
+
     with open(path, "rb") as f:
         response = Response(f.read())
 
-    date_modified = datetime.utcfromtimestamp(os.path.getmtime(path))
-    response.headers["Last-Modified"] = date_modified.strftime("%a, %d %b %Y %T GMT")
+    response.headers["Last-Modified"] = img_last_modified(rel_path)
 
     return response
+
+
+def img_last_modified(rel_path):
+    path = os.path.join(RECIPE_DIR, rel_path)
+    date_modified = datetime.utcfromtimestamp(os.path.getctime(path))
+    return date_modified.strftime("%a, %d %b %Y %T GMT")
 
 
 def render_folder(rel_path):
@@ -136,7 +148,7 @@ def render_recipe(rel_path, is_printable, color):
     title = parent_folders[-1]
     with open(full_path) as f:
         recipe = Recipe.parse(f.read())
-    image = get_image_name(rel_path)
+    image_path = get_image_path(rel_path)
 
     highlighted_steps = highlight_steps(recipe.ingredients, recipe.steps)
 
@@ -149,7 +161,7 @@ def render_recipe(rel_path, is_printable, color):
         steps=highlighted_steps,
         metadata=recipe.metadata,
         title=title,
-        image=image,
+        image_path=image_path,
         cooklang_link=cooklang_link,
         printable_link=printable_link,
         is_printable=is_printable,

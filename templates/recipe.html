@@ -22,11 +22,11 @@
         <span title="Printer-friendly view"><a href="{{printable_link}}">🖨️</a></span>
         <span title="Download .cook file"><a href="{{cooklang_link}}">💾</a></span>
     </div>
-    {% if image %}
+    {% if image_path %}
     <div class=images>
         <details id=recipe-img-tab>
             <summary>Pics:</summary>
-            <span><img class=recipe-img data-src="/cookbook/{{image}}"/></span>
+            <span><img class=recipe-img data-src="/cookbook/{{image_path}}"/></span>
         </details>
     </div>
     {% endif %}
